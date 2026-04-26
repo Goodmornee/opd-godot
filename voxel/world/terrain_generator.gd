@@ -25,13 +25,21 @@ static func random_blocks():
 
 static func flat(chunk_position):
 	var data = {}
-
+	
 	if chunk_position.y != -1:
 		return data
+	
+	
 
 	for x in range(CHUNK_SIZE):
 		for z in range(CHUNK_SIZE):
-			data[Vector3i(x, 0, z)] = 3
+			if x % 2 == 1 or z % 2 == 1:
+				continue
+			var y_start = 3
+			var block = randi() % 10 + 1
+			for y in range(y_start):
+				var vec = Vector3i(x, y, z)
+				data[vec] = block
 
 	return data
 
