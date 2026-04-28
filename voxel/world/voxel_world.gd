@@ -18,6 +18,9 @@ var _deleting = false
 
 var _chunks = {}
 
+# Добавлено: флаг, чтобы спавнить игрока только один раз
+var _player_spawned = false
+
 @onready var player = $"../Player"
 
 
@@ -59,6 +62,18 @@ func _process(_delta):
 	else:
 		# Effective render distance is maxed out, done generating.
 		_generating = false
+
+	# --- SPAWN PLAYER ON SURFACE ---
+	if not _player_spawned:
+		var spawn_x = 0
+		var spawn_z = 0
+		var surface_y = TerrainGenerator.get_height_at(spawn_x, spawn_z)
+		var chunk_y = surface_y / Chunk.CHUNK_SIZE
+		var chunk_pos = Vector3i(0, chunk_y, 0)
+		if _chunks.has(chunk_pos):
+			player.global_transform.origin = Vector3(spawn_x, surface_y + 0.5, spawn_z)
+			_player_spawned = true
+			print("Игрок заспавнен на высоте ", surface_y)
 
 
 func get_block_global_position(block_global_position: Vector3i):
